@@ -2,10 +2,12 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 
 from src.utils import extract_or_create_filename, read_file, save_file
+from src import logger
 
 
 def decrypt_data(filename_path, new_filename_path, private_key_path):
     with open(filename_path, "rb") as file_in:
+        logger.info(f"Decrypting file {filename_path}...")
         private_key = RSA.import_key(read_file(private_key_path))
         enc_session_key, nonce, tag, ciphertext = [
             file_in.read(x) for x in (private_key.size_in_bytes(), 16, 16, -1)
@@ -22,3 +24,4 @@ def decrypt_data(filename_path, new_filename_path, private_key_path):
             new_filename_path, filename_path
         )
         save_file(decrypt_filename, data)
+        logger.info("File successfully decrypted.")

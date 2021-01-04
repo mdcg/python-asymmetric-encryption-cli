@@ -1,5 +1,7 @@
 import os
 
+from src import logger
+
 
 def read_file(path):
     with open(path, "rb") as f:
@@ -13,6 +15,7 @@ def save_file(path, data):
 
     with open(path, "wb") as f:
         f.write(data)
+        logger.info(f"File saved in '{path}'.")
 
 
 def extract_or_create_filename(new_filename, current_filename):

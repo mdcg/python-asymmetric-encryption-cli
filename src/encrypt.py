@@ -5,11 +5,16 @@ from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
 from src.utils import read_file
+from src import logger
 
 
 def encrypt_data(filename_path, public_key_path):
     data = read_file(filename_path)
-    encrypted_filename = f"{os.path.basename(filename_path).split('.')[0]}.bin"
+    logger.info(f"Encrypting file {filename_path}...")
+    encrypted_filename = os.path.join(
+        os.path.dirname(filename_path),
+        f"{os.path.basename(filename_path).split('.')[0]}.bin",
+    )
     with open(encrypted_filename, "wb") as file_out:
         recipient_key = RSA.import_key(read_file(public_key_path))
         session_key = get_random_bytes(16)
@@ -25,3 +30,5 @@ def encrypt_data(filename_path, public_key_path):
             file_out.write(x)
             for x in (enc_session_key, cipher_aes.nonce, tag, ciphertext)
         ]
+        logger.info(f"File saved in '{encrypted_filename}'.")
+        logger.info("File successfully encrypted.")

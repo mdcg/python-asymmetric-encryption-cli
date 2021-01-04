@@ -5,6 +5,7 @@ import click
 from src.decrypt import decrypt_data
 from src.encrypt import encrypt_data
 from src.key_gen import generate_public_key
+from src import logger
 
 
 def default_keys_path():
@@ -26,7 +27,7 @@ def key_gen(keys_path):
     try:
         generate_public_key(keys_path)
     except Exception as err:
-        click.echo(err)
+        logger.error(f"{err}")
 
 
 @cli.command()
@@ -40,7 +41,7 @@ def encrypt(public_key, filename):
     try:
         encrypt_data(filename, public_key)
     except Exception as err:
-        click.echo(err)
+        logger.error(f"{err}")
 
 
 @cli.command()
@@ -52,10 +53,10 @@ def encrypt(public_key, filename):
 @click.argument("filename")
 @click.argument("new_filename")
 def decrypt(private_key, filename, new_filename):
-    # try:
-    decrypt_data(filename, new_filename, private_key)
-    # except Exception as err:
-    #     click.echo(err)
+    try:
+        decrypt_data(filename, new_filename, private_key)
+    except Exception as err:
+        logger.error(f"{err}")
 
 
 if __name__ == "__main__":
